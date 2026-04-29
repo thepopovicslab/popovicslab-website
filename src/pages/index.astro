@@ -1,50 +1,949 @@
----
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
----
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Popovics Lab | Benign Prostatic Hyperplasia Research</title>
+  <meta name="description" content="The Popovics Lab studies benign prostatic hyperplasia, urinary function, inflammation, fibrosis, and prostate tissue remodeling through translational research." />
+
+  <style>
+    :root {
+      --navy: #123044;
+      --navy-soft: #193d55;
+      --teal: #3c9b9b;
+      --teal-dark: #2f7f80;
+      --red: #8f2f2f;
+      --cream: #f7f3ed;
+      --cream-2: #fbfaf7;
+      --ink: #18232b;
+      --muted: #64727d;
+      --line: rgba(18, 48, 68, 0.12);
+      --card: rgba(255, 255, 255, 0.88);
+      --shadow: 0 24px 60px rgba(18, 48, 68, 0.14);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--cream-2);
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-shell {
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 8% 8%, rgba(60, 155, 155, 0.18), transparent 28rem),
+        radial-gradient(circle at 82% 10%, rgba(143, 47, 47, 0.10), transparent 26rem),
+        linear-gradient(180deg, #fbfaf7 0%, #f7f3ed 48%, #ffffff 100%);
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(251, 250, 247, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+
+    .brand img {
+      width: min(270px, 52vw);
+      height: auto;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 0.96rem;
+      color: var(--navy-soft);
+    }
+
+    .nav-links a {
+      opacity: 0.88;
+      transition: 180ms ease;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+      color: var(--teal-dark);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: 180ms ease;
+      cursor: pointer;
+    }
+
+    .button-primary {
+      color: white;
+      background: var(--navy);
+      box-shadow: 0 16px 34px rgba(18, 48, 68, 0.22);
+    }
+
+    .button-primary:hover {
+      transform: translateY(-2px);
+      background: #0d2638;
+    }
+
+    .button-secondary {
+      color: var(--navy);
+      background: rgba(255, 255, 255, 0.72);
+      border-color: var(--line);
+    }
+
+    .button-secondary:hover {
+      transform: translateY(-2px);
+      border-color: rgba(60, 155, 155, 0.45);
+      background: white;
+    }
+
+    .hero {
+      position: relative;
+      padding: 86px 0 72px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 54px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--teal-dark);
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 38px;
+      height: 2px;
+      background: var(--teal);
+      border-radius: 999px;
+    }
+
+    h1 {
+      color: var(--navy);
+      font-size: clamp(3rem, 7vw, 6.2rem);
+      line-height: 0.94;
+      letter-spacing: -0.065em;
+      margin-bottom: 26px;
+    }
+
+    .hero-lede {
+      font-size: clamp(1.15rem, 2vw, 1.42rem);
+      color: #334650;
+      max-width: 680px;
+      margin-bottom: 18px;
+    }
+
+    .hero-copy {
+      color: var(--muted);
+      max-width: 650px;
+      font-size: 1.03rem;
+      margin-bottom: 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 650px;
+    }
+
+    .stat {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.64);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--navy);
+      font-size: 1.15rem;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .visual-card {
+      position: relative;
+      min-height: 520px;
+      border-radius: 36px;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.46));
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      box-shadow: var(--shadow);
+    }
+
+    .visual-main {
+      height: 100%;
+      min-height: 484px;
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      background:
+        linear-gradient(135deg, rgba(18, 48, 68, 0.82), rgba(60, 155, 155, 0.58)),
+        url("images/hero-microscopy.jpg");
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: end;
+      padding: 28px;
+    }
+
+    .visual-main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 28% 26%, rgba(255, 255, 255, 0.22), transparent 8rem),
+        linear-gradient(180deg, transparent 0%, rgba(18, 48, 68, 0.72) 100%);
+    }
+
+    .visual-text {
+      position: relative;
+      color: white;
+    }
+
+    .visual-text h2 {
+      font-size: 2.15rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    .visual-text p {
+      color: rgba(255, 255, 255, 0.86);
+      max-width: 380px;
+    }
+
+    .floating-card {
+      position: absolute;
+      right: -26px;
+      top: 44px;
+      width: 238px;
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 20px 44px rgba(18, 48, 68, 0.18);
+    }
+
+    .floating-card .tag {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(60, 155, 155, 0.12);
+      color: var(--teal-dark);
+      font-size: 0.74rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .floating-card strong {
+      color: var(--navy);
+      display: block;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .floating-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    section {
+      padding: 72px 0;
+    }
+
+    .section-heading {
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+
+    .section-heading.center {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .section-kicker {
+      color: var(--teal-dark);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: var(--navy);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      margin-bottom: 16px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 1.06rem;
+    }
+
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .research-card {
+      min-height: 290px;
+      border-radius: var(--radius);
+      padding: 26px;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 45px rgba(18, 48, 68, 0.07);
+      transition: 180ms ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .research-card::after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 999px;
+      right: -70px;
+      top: -70px;
+      background: rgba(60, 155, 155, 0.12);
+    }
+
+    .research-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 22px 55px rgba(18, 48, 68, 0.12);
+    }
+
+    .icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+      color: white;
+      background: linear-gradient(135deg, var(--teal), var(--navy));
+      font-weight: 900;
+      font-size: 1.2rem;
+    }
+
+    .research-card h3 {
+      color: var(--navy);
+      font-size: 1.34rem;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .research-card p {
+      color: var(--muted);
+    }
+
+    .feature-band {
+      border-radius: 34px;
+      background: var(--navy);
+      color: white;
+      padding: 42px;
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 38px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(60, 155, 155, 0.30), transparent 18rem),
+        radial-gradient(circle at 90% 70%, rgba(143, 47, 47, 0.26), transparent 18rem);
+    }
+
+    .feature-band > * {
+      position: relative;
+    }
+
+    .feature-band h2 {
+      color: white;
+      margin-bottom: 18px;
+    }
+
+    .feature-band p {
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 1.05rem;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .feature-item {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .feature-item strong {
+      display: block;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .feature-item span {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.95rem;
+    }
+
+    .people-preview {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .portrait-card {
+      min-height: 420px;
+      border-radius: 34px;
+      background:
+        linear-gradient(180deg, rgba(18, 48, 68, 0.10), rgba(60, 155, 155, 0.12)),
+        url("images/team-photo.jpg");
+      background-size: cover;
+      background-position: center;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 45px rgba(18, 48, 68, 0.09);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .portrait-card::after {
+      content: "Lab photo placeholder";
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      color: var(--navy);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .people-text {
+      padding: 34px;
+      border-radius: 34px;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 45px rgba(18, 48, 68, 0.07);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .people-text p {
+      color: var(--muted);
+      margin-bottom: 22px;
+      font-size: 1.04rem;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .mini-card {
+      border-radius: 18px;
+      padding: 16px;
+      background: var(--cream);
+      border: 1px solid var(--line);
+    }
+
+    .mini-card strong {
+      display: block;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .mini-card span {
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .news-card {
+      border-radius: 24px;
+      background: white;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(18, 48, 68, 0.07);
+    }
+
+    .news-image {
+      height: 160px;
+      background:
+        linear-gradient(135deg, rgba(60, 155, 155, 0.82), rgba(18, 48, 68, 0.82)),
+        url("images/news-placeholder.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .news-body {
+      padding: 22px;
+    }
+
+    .date {
+      color: var(--teal-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .news-body h3 {
+      color: var(--navy);
+      line-height: 1.18;
+      margin-bottom: 10px;
+      font-size: 1.13rem;
+    }
+
+    .news-body p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .cta {
+      padding-bottom: 92px;
+    }
+
+    .cta-card {
+      border-radius: 36px;
+      padding: 44px;
+      background: linear-gradient(135deg, var(--teal), var(--navy));
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      gap: 28px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .cta-card h2 {
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    .cta-card p {
+      color: rgba(255, 255, 255, 0.82);
+      max-width: 680px;
+    }
+
+    .cta-card .button {
+      background: white;
+      color: var(--navy);
+      flex: 0 0 auto;
+    }
+
+    footer {
+      background: var(--navy);
+      color: rgba(255, 255, 255, 0.76);
+      padding: 44px 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .footer-brand {
+      color: white;
+      font-weight: 900;
+      font-size: 1.18rem;
+      margin-bottom: 8px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 0.94rem;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    @media (max-width: 930px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-grid,
+      .feature-band,
+      .people-preview,
+      .cta-card,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-card {
+        min-height: 440px;
+      }
+
+      .floating-card {
+        right: 18px;
+        top: 18px;
+      }
+
+      .research-grid,
+      .news-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-card {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .container {
+        width: min(100% - 28px, 1160px);
+      }
+
+      .hero {
+        padding-top: 56px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .feature-band,
+      .cta-card,
+      .people-text {
+        padding: 26px;
+        border-radius: 26px;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="container nav">
+        <a href="#top" class="brand" aria-label="Popovics Lab home">
+          <img src="images/popovics-lab-logo.png" alt="The Popovics Lab logo">
+        </a>
+
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#research">Research</a>
+          <a href="#approach">Approach</a>
+          <a href="#people">People</a>
+          <a href="#news">News</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow">Benign Prostatic Hyperplasia Research</div>
+            <h1>Redefining how we understand benign prostate disease.</h1>
+            <p class="hero-lede">We study how inflammation, aging, cellular stress, and tissue remodeling contribute to benign prostatic hyperplasia and lower urinary tract symptoms.</p>
+            <p class="hero-copy">The Popovics Lab combines human prostate tissues, molecular biology, histology, imaging, and translational models to uncover mechanisms that may shape better treatment strategies for benign prostate disease.</p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="#research">Explore our research</a>
+              <a class="button button-secondary" href="#people">Meet the team</a>
+            </div>
+
+            <div class="hero-stats" aria-label="Research themes">
+              <div class="stat">
+                <strong>BPH & LUTS</strong>
+                <span>Mechanisms behind prostate enlargement and urinary dysfunction.</span>
+              </div>
+              <div class="stat">
+                <strong>Inflammation</strong>
+                <span>Immune and stress pathways that reshape prostate tissue.</span>
+              </div>
+              <div class="stat">
+                <strong>Fibrosis</strong>
+                <span>Extracellular matrix remodeling and epithelial-stromal crosstalk.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="visual-card" aria-label="Microscopy-inspired laboratory visual">
+            <div class="visual-main">
+              <div class="visual-text">
+                <h2>From tissue to mechanism.</h2>
+                <p>Connecting what we see under the microscope to the biological pathways that drive disease.</p>
+              </div>
+            </div>
+
+            <div class="floating-card">
+              <span class="tag">Translational Science</span>
+              <strong>Human tissue. Imaging. Molecular insight.</strong>
+              <p>A modern lab site that feels alive, visual, and research-forward.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="research">
+        <div class="container">
+          <div class="section-heading center">
+            <div class="section-kicker">Research Focus</div>
+            <h2>Understanding benign prostate disease from multiple angles.</h2>
+            <p>Our work investigates the cellular and molecular changes that contribute to BPH progression, urinary symptoms, and prostate tissue remodeling.</p>
+          </div>
+
+          <div class="research-grid">
+            <article class="research-card">
+              <div class="icon">01</div>
+              <h3>Benign Prostatic Hyperplasia</h3>
+              <p>We investigate the biological processes that contribute to prostate enlargement and lower urinary tract symptoms, with a focus on patient-relevant mechanisms.</p>
+            </article>
+
+            <article class="research-card">
+              <div class="icon">02</div>
+              <h3>Inflammation & Cellular Stress</h3>
+              <p>We explore how inflammatory signaling, endoplasmic reticulum stress, and epithelial responses may influence disease-associated changes in the prostate.</p>
+            </article>
+
+            <article class="research-card">
+              <div class="icon">03</div>
+              <h3>Fibrosis & Tissue Remodeling</h3>
+              <p>We study stromal remodeling, collagen deposition, and epithelial-stromal communication to understand how tissue architecture changes during BPH.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="approach">
+        <div class="container">
+          <div class="feature-band">
+            <div>
+              <div class="section-kicker">Our Approach</div>
+              <h2>Mechanistic research grounded in real tissue biology.</h2>
+              <p>We use complementary experimental systems to connect molecular pathways with histological and functional changes in prostate disease.</p>
+            </div>
+
+            <div class="feature-list">
+              <div class="feature-item">
+                <strong>Human prostate tissues</strong>
+                <span>Histology, immunostaining, and imaging-based analysis of clinically relevant specimens.</span>
+              </div>
+              <div class="feature-item">
+                <strong>Cellular and molecular tools</strong>
+                <span>Modeling epithelial-stromal interactions and stress-related pathways in controlled systems.</span>
+              </div>
+              <div class="feature-item">
+                <strong>Translational models</strong>
+                <span>Connecting tissue-level changes with urinary function and disease-relevant outcomes.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="people">
+        <div class="container people-preview">
+          <div class="portrait-card"></div>
+
+          <div class="people-text">
+            <div class="section-kicker">People</div>
+            <h2>A curious, collaborative team studying prostate biology.</h2>
+            <p>Our lab brings together trainees, scientists, and collaborators interested in molecular biology, imaging, histology, translational models, and the biology of benign prostate disease.</p>
+            <a class="button button-primary" href="team.html">Meet the full team</a>
+
+            <div class="mini-grid">
+              <div class="mini-card">
+                <strong>Training-focused</strong>
+                <span>Hands-on research experience across experimental and analytical techniques.</span>
+              </div>
+              <div class="mini-card">
+                <strong>Collaborative</strong>
+                <span>Bringing together complementary expertise to ask better biological questions.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="news">
+        <div class="container">
+          <div class="section-heading">
+            <div class="section-kicker">Lab Updates</div>
+            <h2>News, publications, and behind-the-scenes science.</h2>
+            <p>Use this section for paper updates, conference photos, new lab members, grant news, outreach, and little glimpses of lab life.</p>
+          </div>
+
+          <div class="news-grid">
+            <article class="news-card">
+              <div class="news-image"></div>
+              <div class="news-body">
+                <div class="date">Latest</div>
+                <h3>New website under construction</h3>
+                <p>We are building a new home for Popovics Lab research, resources, and lab updates.</p>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-image"></div>
+              <div class="news-body">
+                <div class="date">Research</div>
+                <h3>Research highlights coming soon</h3>
+                <p>Featured projects will include BPH, inflammation, fibrosis, imaging, and translational models.</p>
+              </div>
+            </article>
+
+            <article class="news-card">
+              <div class="news-image"></div>
+              <div class="news-body">
+                <div class="date">Join Us</div>
+                <h3>Interested in the lab?</h3>
+                <p>Students and collaborators can learn more about our work and how to get in touch.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta" id="contact">
+        <div class="container">
+          <div class="cta-card">
+            <div>
+              <h2>Interested in our work?</h2>
+              <p>Connect with the Popovics Lab to learn more about our research, collaborations, training opportunities, and ongoing projects.</p>
+            </div>
+            <a class="button" href="mailto:your-email@odu.edu">Contact the lab</a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="footer-brand">Popovics Lab</div>
+        <p>Macon & Joan Brock Virginia Health Sciences at Old Dominion University</p>
+      </div>
+      <div class="footer-links">
+        <a href="#research">Research</a>
+        <a href="#people">People</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
 </html>
