@@ -10,16 +10,19 @@
     :root {
       --navy: #123044;
       --navy-soft: #193d55;
-      --teal: #3c9b9b;
-      --teal-dark: #2f7f80;
-      --red: #8f2f2f;
-      --cream: #f7f3ed;
-      --cream-2: #fbfaf7;
-      --ink: #18232b;
-      --muted: #64727d;
-      --line: rgba(18, 48, 68, 0.12);
-      --card: rgba(255, 255, 255, 0.88);
-      --shadow: 0 24px 60px rgba(18, 48, 68, 0.14);
+      --teal: #2f9fa0;
+      --teal-bright: #41b9b8;
+      --teal-dark: #21777a;
+      --teal-deep: #155b61;
+      --red: #9a2f2f;
+      --red-dark: #762323;
+      --ice: #eefafa;
+      --paper: #ffffff;
+      --ink: #17252b;
+      --muted: #5d6e75;
+      --line: rgba(33, 119, 122, 0.18);
+      --card: rgba(255, 255, 255, 0.94);
+      --shadow: 0 24px 60px rgba(21, 91, 97, 0.18);
       --radius: 24px;
     }
 
@@ -33,10 +36,59 @@
       scroll-behavior: smooth;
     }
 
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes floatSoft {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-12px);
+      }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% {
+        opacity: 0.68;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.04);
+      }
+    }
+
+    @keyframes lineGrow {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
     body {
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--ink);
-      background: var(--cream-2);
+      background: var(--ice);
       line-height: 1.6;
     }
 
@@ -53,9 +105,9 @@
     .site-shell {
       overflow: hidden;
       background:
-        radial-gradient(circle at 8% 8%, rgba(60, 155, 155, 0.18), transparent 28rem),
-        radial-gradient(circle at 82% 10%, rgba(143, 47, 47, 0.10), transparent 26rem),
-        linear-gradient(180deg, #fbfaf7 0%, #f7f3ed 48%, #ffffff 100%);
+        radial-gradient(circle at 8% 8%, rgba(65, 185, 184, 0.28), transparent 30rem),
+        radial-gradient(circle at 82% 10%, rgba(154, 47, 47, 0.16), transparent 26rem),
+        linear-gradient(180deg, #eefafa 0%, #f8ffff 42%, #ffffff 100%);
     }
 
     .container {
@@ -68,7 +120,7 @@
       top: 0;
       z-index: 20;
       backdrop-filter: blur(18px);
-      background: rgba(251, 250, 247, 0.82);
+      background: rgba(255, 255, 255, 0.88);
       border-bottom: 1px solid var(--line);
     }
 
@@ -85,10 +137,15 @@
       align-items: center;
       color: var(--navy);
       white-space: nowrap;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 1px solid rgba(33, 119, 122, 0.14);
+      box-shadow: 0 12px 30px rgba(21, 91, 97, 0.10);
     }
 
     .brand img {
-      width: min(270px, 52vw);
+      width: min(250px, 54vw);
       height: auto;
       object-fit: contain;
     }
@@ -98,7 +155,7 @@
       align-items: center;
       gap: 22px;
       font-size: 0.96rem;
-      color: var(--navy-soft);
+      color: var(--teal-deep);
     }
 
     .nav-links a {
@@ -126,13 +183,13 @@
 
     .button-primary {
       color: white;
-      background: var(--navy);
-      box-shadow: 0 16px 34px rgba(18, 48, 68, 0.22);
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal-deep));
+      box-shadow: 0 16px 34px rgba(33, 119, 122, 0.26);
     }
 
     .button-primary:hover {
       transform: translateY(-2px);
-      background: #0d2638;
+      background: linear-gradient(135deg, var(--teal-deep), var(--navy));
     }
 
     .button-secondary {
@@ -152,7 +209,36 @@
       padding: 86px 0 72px;
     }
 
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero::before {
+      width: 260px;
+      height: 260px;
+      left: -90px;
+      top: 80px;
+      background: rgba(60, 155, 155, 0.12);
+      animation: glowPulse 7s ease-in-out infinite;
+    }
+
+    .hero::after {
+      width: 180px;
+      height: 180px;
+      right: 6%;
+      bottom: 36px;
+      background: rgba(143, 47, 47, 0.10);
+      animation: glowPulse 8s ease-in-out infinite 1.2s;
+    }
+
     .hero-grid {
+      position: relative;
+      z-index: 1;
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
       gap: 54px;
@@ -169,6 +255,7 @@
       text-transform: uppercase;
       font-size: 0.76rem;
       margin-bottom: 22px;
+      animation: fadeUp 0.7s ease both;
     }
 
     .eyebrow::before {
@@ -177,6 +264,8 @@
       height: 2px;
       background: var(--teal);
       border-radius: 999px;
+      transform-origin: left;
+      animation: lineGrow 0.8s ease both 0.25s;
     }
 
     h1 {
@@ -185,6 +274,7 @@
       line-height: 0.94;
       letter-spacing: -0.065em;
       margin-bottom: 26px;
+      animation: fadeUp 0.75s ease both 0.1s;
     }
 
     .hero-lede {
@@ -192,6 +282,7 @@
       color: #334650;
       max-width: 680px;
       margin-bottom: 18px;
+      animation: fadeUp 0.75s ease both 0.2s;
     }
 
     .hero-copy {
@@ -199,6 +290,7 @@
       max-width: 650px;
       font-size: 1.03rem;
       margin-bottom: 30px;
+      animation: fadeUp 0.75s ease both 0.3s;
     }
 
     .hero-actions {
@@ -206,6 +298,7 @@
       flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 36px;
+      animation: fadeUp 0.75s ease both 0.4s;
     }
 
     .hero-stats {
@@ -213,6 +306,7 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       max-width: 650px;
+      animation: fadeUp 0.75s ease both 0.5s;
     }
 
     .stat {
@@ -243,6 +337,7 @@
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.46));
       border: 1px solid rgba(255, 255, 255, 0.76);
       box-shadow: var(--shadow);
+      animation: fadeUp 0.9s ease both 0.3s, floatSoft 6s ease-in-out infinite 1.2s;
     }
 
     .visual-main {
@@ -253,7 +348,7 @@
       position: relative;
       background:
         linear-gradient(135deg, rgba(18, 48, 68, 0.82), rgba(60, 155, 155, 0.58)),
-        url("images/hero-microscopy.jpg");
+        url("/images/hero-microscopy.jpg");
       background-size: cover;
       background-position: center;
       display: flex;
@@ -297,6 +392,7 @@
       background: rgba(255, 255, 255, 0.92);
       border: 1px solid rgba(255, 255, 255, 0.8);
       box-shadow: 0 20px 44px rgba(18, 48, 68, 0.18);
+      animation: floatSoft 5.4s ease-in-out infinite;
     }
 
     .floating-card .tag {
@@ -401,7 +497,7 @@
       place-items: center;
       margin-bottom: 22px;
       color: white;
-      background: linear-gradient(135deg, var(--teal), var(--navy));
+      background: linear-gradient(135deg, var(--teal-bright), var(--teal-deep));
       font-weight: 900;
       font-size: 1.2rem;
     }
@@ -420,7 +516,7 @@
 
     .feature-band {
       border-radius: 34px;
-      background: var(--navy);
+      background: linear-gradient(135deg, var(--teal-deep), var(--navy));
       color: white;
       padding: 42px;
       display: grid;
@@ -490,7 +586,7 @@
       border-radius: 34px;
       background:
         linear-gradient(180deg, rgba(18, 48, 68, 0.10), rgba(60, 155, 155, 0.12)),
-        url("images/team-photo.jpg");
+        url("/images/team-photo.jpg");
       background-size: cover;
       background-position: center;
       border: 1px solid var(--line);
@@ -539,7 +635,7 @@
     .mini-card {
       border-radius: 18px;
       padding: 16px;
-      background: var(--cream);
+      background: rgba(238, 250, 250, 0.85);
       border: 1px solid var(--line);
     }
 
@@ -572,7 +668,7 @@
       height: 160px;
       background:
         linear-gradient(135deg, rgba(60, 155, 155, 0.82), rgba(18, 48, 68, 0.82)),
-        url("images/news-placeholder.jpg");
+        url("/images/news-placeholder.jpg");
       background-size: cover;
       background-position: center;
     }
@@ -609,7 +705,7 @@
     .cta-card {
       border-radius: 36px;
       padding: 44px;
-      background: linear-gradient(135deg, var(--teal), var(--navy));
+      background: linear-gradient(135deg, var(--teal-bright), var(--teal-deep));
       color: white;
       display: flex;
       justify-content: space-between;
@@ -635,8 +731,8 @@
     }
 
     footer {
-      background: var(--navy);
-      color: rgba(255, 255, 255, 0.76);
+      background: var(--teal-deep);
+      color: rgba(255, 255, 255, 0.78);
       padding: 44px 0;
     }
 
@@ -737,7 +833,7 @@
     <header class="topbar">
       <div class="container nav">
         <a href="#top" class="brand" aria-label="Popovics Lab home">
-          <img src="images/popovics-lab-logo.png" alt="The Popovics Lab logo">
+          <img src="/images/popovics-lab-logo.png" alt="The Popovics Lab logo">
         </a>
 
         <nav class="nav-links" aria-label="Main navigation">
